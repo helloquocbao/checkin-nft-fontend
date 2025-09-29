@@ -1,0 +1,35 @@
+{
+  "name": "kit-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@mysten/dapp-kit": "^0.18.0",
+    "@mysten/sui": "^1.38.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "axios": "^1.11.0",
+    "next": "15.5.2",
+    "next-intl": "^4.3.5",
+    "query-string": "^9.2.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
+    "redux": "^5.0.1",
+    "use-debounce": "^10.0.5"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.2",
+    "typescript": "^5"
+  }
+}

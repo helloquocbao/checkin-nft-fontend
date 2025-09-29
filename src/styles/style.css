@@ -1,0 +1,11 @@
+.ant-card-body {
+  padding: 16px !important
+}
+
+.ant-form-item-label label {
+  height: auto !important;
+}
+
+.main-container {
+  min-height: 100vh;
+}
