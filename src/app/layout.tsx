@@ -1,19 +1,6 @@
-/** @format */
-/**
- * Review for template by daoquang:
- *
- * - Uses Next.js app directory conventions and server components.
- * - Metadata is well-structured for SEO and social sharing, but placeholders should be replaced with actual values.
- * - Locale is dynamically set from cookies, defaulting to 'vi'.
- * - Includes Bootstrap via CDN for styling and scripts.
- * - Applies global styles and ensures minimum viewport height.
- * - Consider moving inline styles and scripts to separate files for maintainability.
- * - Good use of TypeScript types for props.
- */
-
 import { Metadata } from "next";
 import { cookies } from "next/headers";
-import "../styles/style.css";
+import "../styles/globals.css";
 import ReduxProvider from "@/lib/ReduxProvider";
 
 export const metadata: Metadata = {

@@ -11,7 +11,6 @@ const { networkConfig } = createNetworkConfig({
   testnet: { url: "https://fullnode.testnet.sui.io:443" },
 });
 
-// tạo QueryClient 1 lần
 const queryClient = new QueryClient();
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {

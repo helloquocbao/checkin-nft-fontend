@@ -29,7 +29,7 @@ const Home = () => {
     <div className="container py-4">
       <div className="row ">
         <div className="col-sm-12 col-md-8 offset-md-2">
-          <div className="mt-5 py-5 text-center">{t("title")}</div>
+          <div className="mt-5 py-5 text-center text-red">{t("title")}</div>
           <MintNFTButton
             packageId={
               "0x020dd0b594355313adb92344e9afd35b37359635fc30cc7350db18d24e949da1"
