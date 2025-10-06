@@ -1,30 +1,107 @@
+/* Global Styles */
+@tailwind base;
+@tailwind base;
 @tailwind base;
 
 html {
+
   scroll-behavior: smooth;
+  @tailwind components;
+
 }
 
-@tailwind components;
 @tailwind utilities;
+@tailwind components;
+@tailwind components;
+
+body {
+
+  margin: 0;
+  @tailwind utilities;
+  @tailwind utilities;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+
+  html {
+    html {
+
+      -moz-osx-font-smoothing: grayscale;
+
+    }
+
+    scroll-behavior: smooth;
+    scroll-behavior: smooth;
+
+
+
+    * {}
+  }
+
+  box-sizing: border-box;
+
+}
 
 @layer base {
-  * {
-    text-transform: capitalize;
+  @layer base {
+
+    * {
+      * {
+
+        text-transform: capitalize;
+        text-transform: capitalize;
+
+      }
+    }
+
+
+
+    .light body {
+      .light body {
+
+        background: #fff !important;
+        background: #fff !important;
+
+        color: #000;
+        color: #000;
+
+      }
+    }
+
+
+
+    .dark body {
+      .text-black {
+
+        background: #000 !important;
+        color: rgba(0, 0, 0, 0.6);
+
+        color: #fff;
+      }
+
+    }
   }
 
-  .light body {
-    background: #fff !important;
-    color: #000;
-  }
-
-  .text-black {
-    color: rgba(0, 0, 0, 0.6);
-  }
 }
 
 @layer components {
-  .show .dropdown-menu {
-    display: block !important;
+
+  @layer components {
+    .show .dropdown-menu {
+
+      .container {
+        display: block !important;
+
+        @apply mx-auto px-4;
+      }
+
+    }
+
   }
 
   .dropdown-menu-end {
@@ -4110,7 +4187,7 @@ html {
   }
 
   .before\:bg-\[url\(\'\.\.\/img\/heart-fill\.svg\'\)\]:before {
-    background-image: url(../img/a103374135dc865e7608.svg);
+    background-image: url(../../public/a103374135dc865e7608.svg);
     content: var(--tw-content);
   }
 

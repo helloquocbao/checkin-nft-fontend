@@ -1,54 +1,25 @@
-/** @format */
-
 "use client";
-// import handleAPI from "@/apis/handleAPI";
-import { MintNFTButton } from "@/components/mintNFTButton/MintNFTButton";
-import { MintNFTCollect } from "@/components/mintNFTCollect/MintNFTCollect";
-import { useLocale, useTranslations } from "next-intl";
+import React, { useContext, useEffect } from "react";
+import UserContext from "@/components/UserContext";
+import HomePage from "./(home)/Home";
 
-const Home = () => {
-  const t = useTranslations("Welcome");
-  const locale = useLocale();
-  console.log("Locale:", locale);
+export default function Home() {
+  const { scrollRef } = useContext(UserContext);
 
-  // ví dụ dùng Redux
-  // const auth = useSelector(authSelector);
-  // console.log(auth);
-
-  // ví dụ dùng handleAPI
-  // const getPosts = async () => {
-  //   try {
-  //     const res = await handleAPI("/posts");
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  useEffect(() => {
+    window.scrollTo(0, scrollRef.current.scrollPos);
+    const handleScrollPos = () => {
+      scrollRef.current.scrollPos = window.scrollY;
+    };
+    window.addEventListener("scroll", handleScrollPos);
+    return () => {
+      window.removeEventListener("scroll", handleScrollPos);
+    };
+  });
 
   return (
-    <div className="container py-4">
-      <div className="row ">
-        <div className="col-sm-12 col-md-8 offset-md-2">
-          <div className="mt-5 py-5 text-center text-red">{t("title")}</div>
-          <MintNFTButton
-            packageId={
-              "0x020dd0b594355313adb92344e9afd35b37359635fc30cc7350db18d24e949da1"
-            }
-            moduleName={"nft_frame"}
-            functionName={"mint_and_transfer"}
-          />
-          mint collect
-          <MintNFTCollect
-            packageId={
-              "0xbad9dae62e2bd96f423174014a8feed2bb0fea4390511e3aa17fbaccfb89e9e2"
-            }
-            moduleName={"collection"}
-            functionName={"create_collection"}
-          />
-        </div>
-      </div>
-    </div>
+    <>
+      <HomePage />
+    </>
   );
-};
-
-export default Home;
+}

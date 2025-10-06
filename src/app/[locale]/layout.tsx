@@ -1,4 +1,3 @@
-import { FooterComponent, HeaderComponent } from "@/components";
 import { locales } from "@/i18n";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -24,9 +23,7 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
       <ClientProviders>
-        <HeaderComponent />
         <div className="container">{children}</div>
-        <FooterComponent />
       </ClientProviders>
     </NextIntlClientProvider>
   );
