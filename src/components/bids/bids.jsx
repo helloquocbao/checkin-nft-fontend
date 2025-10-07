@@ -4,7 +4,7 @@ import { HeadLine } from "../component";
 import "tippy.js/dist/tippy.css";
 import BidsCarousel from "../carousel/bidsCarousel";
 
-const Bids = ({ classes = "pt-10 pb-24", bgWhite }) => {
+const Bids = ({ classes = "pt-10 pb-24", bgWhite = null }) => {
   return (
     <section className={classes}>
       {/* <!-- Hot Bids --> */}

@@ -1,7 +1,7 @@
 /** @format */
 
-import axios from 'axios';
-import queryString from 'query-string';
+import axios from "axios";
+import queryString from "query-string";
 
 /**
  *
@@ -24,35 +24,35 @@ import queryString from 'query-string';
  */
 
 const axiosClient = axios.create({
-	// baseURL: 'http://192.168.1.42:3001', // base url server
-	paramsSerializer: (params) => queryString.stringify(params),
+  // baseURL: 'http://192.168.1.42:3001', // base url server
+  paramsSerializer: (params) => queryString.stringify(params),
 });
 
 axiosClient.interceptors.request.use(async (config: any) => {
-	const accesstoken = localStorage.getItem('accessToken');
+  const accesstoken = localStorage.getItem("accessToken");
 
-	// console.log(accesstoken);
-	config.headers = {
-		Authorization: accesstoken ? `Bearer ${accesstoken}` : '',
-		Accept: 'application/json',
-		...config.headers,
-	};
-	config.data;
-	return config;
+  // console.log(accesstoken);
+  config.headers = {
+    Authorization: accesstoken ? `Bearer ${accesstoken}` : "",
+    Accept: "application/json",
+    ...config.headers,
+  };
+  config.data;
+  return config;
 });
 
 axiosClient.interceptors.response.use(
-	(res) => {
-		if (res.data && res.status >= 200 && res.status < 300) {
-			return res.data.data;
-		} else {
-			return Promise.reject(res.data);
-		}
-	},
-	(error) => {
-		const { response } = error;
-		return Promise.reject(response.data.message as string);
-	}
+  (res) => {
+    if (res.data && res.status >= 200 && res.status < 300) {
+      return res.data.data;
+    } else {
+      return Promise.reject(res.data);
+    }
+  },
+  (error) => {
+    const { response } = error;
+    return Promise.reject(response.data.message as string);
+  }
 );
 
 export default axiosClient;

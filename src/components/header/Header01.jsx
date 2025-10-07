@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import DarkMode from "../mode/DarkMode";
-import Logo from "./../../public/images/logo.png";
-import WhiteLogo from "./../../public/images/logo_white.png";
+import Logo from "../../../public/images/logo.png";
+import WhiteLogo from "../../../public/images/logo_white.png";
 import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/router";
+import { useRouter } from "next-intl/client";
 import {
   isChildrenPageActive,
   isParentPageActive,
-} from "../../utils/daynamicNavigation";
+} from "@/utils/daynamicNavigation";
 import { useEffect, useState } from "react";
 import WalletButton from "../wallet-btn/WalletButton";
 

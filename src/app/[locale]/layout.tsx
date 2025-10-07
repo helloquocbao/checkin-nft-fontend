@@ -4,6 +4,7 @@ import { getMessages } from "next-intl/server";
 import { ClientProviders } from "./ClientProviders";
 import "@mysten/dapp-kit/dist/index.css";
 import { ReactNode } from "react";
+import Layout from "@/components/layout";
 
 type Props = {
   children: ReactNode;
@@ -18,12 +19,12 @@ export default async function LocaleLayout({
   children,
   params: { locale },
 }: Props) {
-  const messages = await getMessages({ locale: locale });
+  const messages = await getMessages(locale);
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
       <ClientProviders>
-        <div className="container">{children}</div>
+        <Layout>{children}</Layout>
       </ClientProviders>
     </NextIntlClientProvider>
   );
