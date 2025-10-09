@@ -1,20 +1,19 @@
 import { useDispatch } from "react-redux";
 import { walletModalShow } from "../../redux/counterSlice";
-import { useMetaMask } from "metamask-react";
+
+import { useCurrentAccount, ConnectButton } from "@mysten/dapp-kit";
 
 export default function WalletButton() {
-  const dispath = useDispatch();
-  const { status, connect, account, chainId, ethereum } = useMetaMask();
+  const dispatch = useDispatch();
 
+  const account = useCurrentAccount();
   const walletHandler = () => {
-    if (status === "unavailable") {
-      dispath(walletModalShow());
+    if (!account) {
+      dispatch(walletModalShow());
     }
   };
 
-  if (status === "initializing") return <div>Ongoing...</div>;
-
-  if (status === "unavailable")
+  if (!account)
     return (
       <button
         onClick={walletHandler}
@@ -33,11 +32,11 @@ export default function WalletButton() {
       </button>
     );
 
-  if (status === "notConnected")
+  if (account)
     return (
       <button
-        onClick={connect}
-        className="js-wallet border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15]"
+        onClick={walletHandler}
+        className="js-wallet border-jacarta-100 hover:bg-accent bg-accent group dark:hover:bg-accent flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent border-transparent dark:border-transparent dark:bg-white/[.15]"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -51,8 +50,6 @@ export default function WalletButton() {
         </svg>
       </button>
     );
-
-  if (status === "connecting") return <div>Connecting...</div>;
 
   return null;
 }
