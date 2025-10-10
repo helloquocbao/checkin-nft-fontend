@@ -20,14 +20,56 @@ export default function Create() {
   const [imageBlob, setImageBlob] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [epochs, setEpochs] = useState(1);
-  const [blobId, setBlobId] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
+  const [position, setPosition] = useState({
+    latitude: null,
+    longitude: null,
+  });
 
-  const handleCapture = (blob) => {
-    setImageBlob(blob);
-    setImagePreview(URL.createObjectURL(blob));
+  const handleCapture = async (blob) => {
+    try {
+      // 🧩 Kiểm tra quyền vị trí trước
+      if (!navigator.geolocation) {
+        alert("⚠️ Trình duyệt không hỗ trợ GPS!");
+        return;
+      }
+
+      // 🧩 Lấy vị trí
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve(pos),
+          (err) => {
+            if (err.code === 1) {
+              // USER_DENIED_PERMISSION
+              alert(
+                "⚠️ Bạn đã từ chối quyền truy cập vị trí. Hãy bật lại GPS để mint NFT!"
+              );
+            } else {
+              alert("⚠️ Không thể lấy vị trí! Hãy kiểm tra cài đặt GPS.");
+            }
+            reject(err);
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      });
+
+      // Nếu lấy được vị trí => lưu
+      const latitude = position.coords.latitude.toString();
+      const longitude = position.coords.longitude.toString();
+
+      // 🧩 Nếu có ảnh và vị trí, cho phép upload
+      setImageBlob(blob);
+      setImagePreview(URL.createObjectURL(blob));
+      setPosition({ latitude, longitude });
+    } catch (err) {
+      console.error("❌ Lỗi khi chụp hoặc lấy vị trí:", err);
+      // Nếu lỗi → reset, không cho mint
+      setImageBlob(null);
+      setImagePreview("");
+      setPosition({ latitude: null, longitude: null });
+    }
   };
 
   // 🧩 Upload ảnh lên Walrus
@@ -39,6 +81,13 @@ export default function Create() {
 
     if (!imageBlob) {
       alert("Vui lòng chụp ảnh trước khi upload!");
+      return;
+    }
+
+    if (!position.latitude || !position.longitude) {
+      alert(
+        "⚠️ Vui lòng bật GPS và cấp quyền truy cập vị trí trước khi mint NFT!"
+      );
       return;
     }
 
@@ -68,7 +117,7 @@ export default function Create() {
       }
 
       console.log("🆔 Blob ID:", newBlobId);
-      setBlobId(newBlobId);
+
       await handleMint(newBlobId);
     } catch (err) {
       console.error("❌ Upload error:", err);
@@ -91,8 +140,13 @@ export default function Create() {
       const tx = new Transaction();
 
       tx.moveCall({
-        target: `0x8a6b70d40ba106daa43249f6d1a4c78724deb7fca33bc8fa709fa73b7827d267::checkin_nft::mint`,
-        arguments: [tx.pure.string("My NFT"), tx.pure.string(newBlobId)],
+        target: `0xcc84871dc79970f2dab50400699552c2ebeba058c8e6a8a4e9f5ace44464311f::checkin_nft::mint`,
+        arguments: [
+          tx.pure.string("My NFT"),
+          tx.pure.string(newBlobId),
+          tx.pure.string(position.latitude),
+          tx.pure.string(position.longitude),
+        ],
       });
 
       const result = await signAndExecute({
@@ -129,6 +183,8 @@ export default function Create() {
           image_url: fields?.image_url,
           rarity: fields?.rarity,
           completion: fields?.completion,
+          latitude: fields?.latitude,
+          longitude: fields?.longitude,
           owner: fields?.owner,
           digest: result.digest,
         });
@@ -146,7 +202,7 @@ export default function Create() {
   const handleRetake = () => {
     setImageBlob(null);
     setImagePreview("");
-    setBlobId("");
+
     setNftInfo(null);
   };
 
@@ -165,16 +221,7 @@ export default function Create() {
             className="w-64 h-64 object-cover rounded shadow-md"
           />
 
-          <div className="flex gap-2 items-center">
-            <label>Epochs:</label>
-            <input
-              type="number"
-              value={epochs}
-              min="1"
-              onChange={(e) => setEpochs(Number(e.target.value))}
-              className="border px-2 py-1 w-16 rounded"
-            />
-          </div>
+          <div className="flex gap-2 items-center"></div>
 
           <div className="flex gap-3">
             <button
@@ -227,6 +274,12 @@ export default function Create() {
                   <strong>Completion:</strong> {nftInfo.completion}
                 </li>
                 <li>
+                  <strong>Latitude:</strong> {nftInfo.latitude}
+                </li>
+                <li>
+                  <strong>Longitude:</strong> {nftInfo.longitude}
+                </li>
+                <li>
                   <strong>Owner:</strong> {nftInfo.owner}
                 </li>
               </ul>
@@ -240,7 +293,17 @@ export default function Create() {
                 >
                   🔗 View image on Walrus
                 </a>
-
+                {nftInfo.latitude && nftInfo.longitude && (
+                  <iframe
+                    title="Map Preview"
+                    width="100%"
+                    height="200"
+                    className="rounded-lg shadow"
+                    loading="lazy"
+                    allowFullScreen
+                    src={`https://www.google.com/maps?q=${nftInfo.latitude},${nftInfo.longitude}&z=15&output=embed`}
+                  />
+                )}
                 <a
                   href={`https://suiexplorer.com/txblock/${nftInfo.digest}?network=testnet`}
                   target="_blank"

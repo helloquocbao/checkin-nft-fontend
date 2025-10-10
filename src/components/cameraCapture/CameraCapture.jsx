@@ -7,11 +7,40 @@ export default function CameraCapture({ onCapture }) {
 
   const startCamera = async () => {
     try {
+      // ⚙️ Kiểm tra trạng thái quyền máy ảnh (nếu trình duyệt hỗ trợ)
+      if (navigator.permissions && navigator.permissions.query) {
+        const permissionStatus = await navigator.permissions.query({
+          name: "camera",
+        });
+
+        if (permissionStatus.state === "denied") {
+          alert(
+            "⚠️ Quyền truy cập máy ảnh đã bị chặn!\n\n" +
+              "Hãy vào Cài đặt trình duyệt → Quyền (Permissions) → Cho phép truy cập camera, sau đó tải lại trang."
+          );
+          return;
+        }
+      }
+
+      // 🧩 Yêu cầu quyền camera
       const s = await navigator.mediaDevices.getUserMedia({ video: true });
+
       if (videoRef.current) videoRef.current.srcObject = s;
       setStream(s);
     } catch (err) {
-      alert("Không thể bật camera: " + err.message);
+      console.error("Camera error:", err);
+
+      // 🧠 Phân loại lỗi để hiển thị thân thiện hơn
+      if (err.name === "NotAllowedError") {
+        alert(
+          "⚠️ Bạn đã từ chối quyền truy cập camera.\n\n" +
+            "Hãy bật lại quyền trong Cài đặt trình duyệt và tải lại trang."
+        );
+      } else if (err.name === "NotFoundError") {
+        alert("🚫 Không tìm thấy camera trên thiết bị của bạn!");
+      } else {
+        alert("❌ Không thể bật camera: " + err.message);
+      }
     }
   };
 
