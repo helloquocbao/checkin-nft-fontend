@@ -22,6 +22,6 @@
 			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/cameraCapture/CameraCapture.jsx", "src/components/mintNFT/MintNFT.jsx"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/cameraCapture/CameraCapture.jsx", "src/components/mintNFT/MintNFT.jsx", "src/app/[locale]/my-nfts/page.jsx"],
 	"exclude": ["node_modules"]
 }

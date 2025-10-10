@@ -13,7 +13,7 @@ export default function Layout({ children }) {
       <BidsModal />
       <BuyModal />
       <main>{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

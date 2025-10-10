@@ -207,116 +207,136 @@ export default function Create() {
   };
 
   return (
-    <div className="container text-center py-12">
-      <Meta title="Create NFT with Walrus" />
-      <h1 className="text-3xl font-semibold mb-6">Create NFT</h1>
+    <section className="relative pb-10 pt-20 md:pt-32 h-1527">
+      <picture className="pointer-events-none absolute inset-x-0 top-0 -z-10 block dark:hidden h-full">
+        <img
+          src="/images/gradient.jpg"
+          alt="gradient"
+          className="h-full w-full"
+        />
+      </picture>
+      <picture className="pointer-events-none absolute inset-x-0 top-0 -z-10 hidden dark:block">
+        <img
+          src="/images/gradient_dark.jpg"
+          alt="gradient dark"
+          className="h-full w-full"
+        />
+      </picture>
+      <div className="container text-center py-12">
+        <Meta title="Create NFT with Walrus" />
+        <h1 className="text-jacarta-700 lg:pt-0 pt-10 font-bold font-display mb-6 text-center text-3xl dark:text-white lg:text-4xl">
+          Checkin and mint NFT
+        </h1>
 
-      {!imageBlob && <CameraCapture onCapture={handleCapture} />}
+        {!imageBlob && <CameraCapture onCapture={handleCapture} />}
 
-      {imageBlob && (
-        <div className="flex flex-col items-center gap-4">
-          <img
-            src={imagePreview}
-            alt="preview"
-            className="w-64 h-64 object-cover rounded shadow-md"
-          />
-
-          <div className="flex gap-2 items-center"></div>
-
-          <div className="flex gap-3">
-            <button
-              onClick={handleUpload}
-              disabled={uploading || loading}
-              className="px-5 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
-            >
-              {uploading
-                ? "Uploading..."
-                : loading
-                ? "Minting..."
-                : "✨ Upload & Mint"}
-            </button>
-
-            <button
-              onClick={handleRetake}
-              className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
-            >
-              🔄 Chụp lại
-            </button>
-          </div>
-
-          {loading && (
-            <p className="text-gray-500 animate-pulse mt-2">
-              Đang xử lý mint NFT...
-            </p>
-          )}
-
-          {nftInfo && (
-            <div className="mt-6 border-t pt-6 w-full max-w-md text-left">
-              <h2 className="text-xl font-semibold mb-3">🎉 NFT Minted!</h2>
-
+        {imageBlob && (
+          <div className="flex flex-col items-center gap-4">
+            {!nftInfo && (
               <img
-                src={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${nftInfo.image_url}`}
-                alt={nftInfo.name}
-                className="w-full rounded-lg shadow-md mb-4"
+                src={imagePreview}
+                alt="preview"
+                className="w-64 h-64 object-cover rounded shadow-md"
               />
+            )}
 
-              <ul className="space-y-1 text-gray-700">
-                <li>
-                  <strong>ID:</strong> {nftInfo.id}
-                </li>
-                <li>
-                  <strong>Name:</strong> {nftInfo.name}
-                </li>
-                <li>
-                  <strong>Rarity:</strong> {nftInfo.rarity}
-                </li>
-                <li>
-                  <strong>Completion:</strong> {nftInfo.completion}
-                </li>
-                <li>
-                  <strong>Latitude:</strong> {nftInfo.latitude}
-                </li>
-                <li>
-                  <strong>Longitude:</strong> {nftInfo.longitude}
-                </li>
-                <li>
-                  <strong>Owner:</strong> {nftInfo.owner}
-                </li>
-              </ul>
+            <div className="flex gap-2 items-center"></div>
 
-              <div className="mt-4 flex flex-col gap-2">
-                <a
-                  href={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${nftInfo.image_url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline"
-                >
-                  🔗 View image on Walrus
-                </a>
-                {nftInfo.latitude && nftInfo.longitude && (
-                  <iframe
-                    title="Map Preview"
-                    width="100%"
-                    height="200"
-                    className="rounded-lg shadow"
-                    loading="lazy"
-                    allowFullScreen
-                    src={`https://www.google.com/maps?q=${nftInfo.latitude},${nftInfo.longitude}&z=15&output=embed`}
-                  />
-                )}
-                <a
-                  href={`https://suiexplorer.com/txblock/${nftInfo.digest}?network=testnet`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green-600 underline"
-                >
-                  🔍 View on Sui Explorer
-                </a>
-              </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleUpload}
+                disabled={uploading || loading}
+                className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-2 px-6 text-center font-semibold text-white transition-all"
+              >
+                {uploading
+                  ? "Uploading..."
+                  : loading
+                  ? "Minting..."
+                  : "✨ Upload & Mint"}
+              </button>
+
+              <button
+                onClick={handleRetake}
+                className="text-accent font-display text-sm font-semibold"
+              >
+                🔄 Chụp lại
+              </button>
             </div>
-          )}
-        </div>
-      )}
-    </div>
+
+            {loading && (
+              <p className="text-gray-500 animate-pulse mt-2">
+                Đang xử lý mint NFT...
+              </p>
+            )}
+
+            {nftInfo && (
+              <div className="mt-6 border-t pt-6 w-full max-w-md text-left">
+                <h2 className="text-xl font-semibold mb-3">🎉 NFT Minted!</h2>
+
+                <img
+                  src={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${nftInfo.image_url}`}
+                  alt={nftInfo.name}
+                  className="w-full rounded-lg shadow-md mb-4"
+                />
+
+                <ul className="space-y-1 text-gray-700 break-words">
+                  <li>
+                    <strong>ID:</strong> {nftInfo.id}
+                  </li>
+                  <li>
+                    <strong>Name:</strong> {nftInfo.name}
+                  </li>
+                  <li>
+                    <strong>Rarity:</strong> {nftInfo.rarity}
+                  </li>
+                  <li>
+                    <strong>Completion:</strong> {nftInfo.completion}
+                  </li>
+                  <li>
+                    <strong>Latitude:</strong> {nftInfo.latitude}
+                  </li>
+                  <li>
+                    <strong>Longitude:</strong> {nftInfo.longitude}
+                  </li>
+                  <li>
+                    <strong>Owner:</strong> {nftInfo.owner}
+                  </li>
+                </ul>
+
+                <div className="mt-4 flex flex-col gap-2">
+                  <a
+                    href={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${nftInfo.image_url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    🔗 View image on Walrus
+                  </a>
+                  {nftInfo.latitude && nftInfo.longitude && (
+                    <iframe
+                      title="Map Preview"
+                      width="100%"
+                      height="250"
+                      className="rounded-lg shadow"
+                      loading="lazy"
+                      allowFullScreen
+                      src={`https://www.google.com/maps?q=${nftInfo.latitude},${nftInfo.longitude}&z=15&output=embed`}
+                    />
+                  )}
+                  <a
+                    href={`https://suiexplorer.com/txblock/${nftInfo.digest}?network=testnet`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-green-600 underline"
+                  >
+                    🔍 View on Sui Explorer
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

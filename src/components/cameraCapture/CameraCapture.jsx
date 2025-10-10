@@ -1,13 +1,27 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export default function CameraCapture({ onCapture }) {
   const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
 
+  // ⏳ Tự động tắt camera sau 30 giây nếu không chụp
+  useEffect(() => {
+    let timeout;
+    if (stream) {
+      timeout = setTimeout(() => {
+        stopCamera();
+        alert(
+          "⚠️ Camera đã tự động tắt vì không có thao tác chụp sau 30 giây."
+        );
+      }, 30000);
+    }
+    return () => clearTimeout(timeout);
+  }, [stream]);
+
   const startCamera = async () => {
     try {
-      // ⚙️ Kiểm tra trạng thái quyền máy ảnh (nếu trình duyệt hỗ trợ)
+      // ⚙️ Kiểm tra quyền camera (nếu trình duyệt hỗ trợ)
       if (navigator.permissions && navigator.permissions.query) {
         const permissionStatus = await navigator.permissions.query({
           name: "camera",
@@ -22,15 +36,13 @@ export default function CameraCapture({ onCapture }) {
         }
       }
 
-      // 🧩 Yêu cầu quyền camera
+      // 🧩 Mở camera
       const s = await navigator.mediaDevices.getUserMedia({ video: true });
-
       if (videoRef.current) videoRef.current.srcObject = s;
       setStream(s);
     } catch (err) {
       console.error("Camera error:", err);
 
-      // 🧠 Phân loại lỗi để hiển thị thân thiện hơn
       if (err.name === "NotAllowedError") {
         alert(
           "⚠️ Bạn đã từ chối quyền truy cập camera.\n\n" +
@@ -67,31 +79,44 @@ export default function CameraCapture({ onCapture }) {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <video ref={videoRef} autoPlay className="w-64 h-48 border rounded" />
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className="w-full max-w-md aspect-[3/4] object-cover rounded-xl border shadow-md bg-black"
+      />
 
       {!stream && (
-        <button
+        <a
           onClick={startCamera}
-          className="px-4 py-2 bg-green-600 text-white rounded"
+          className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block rounded-full py-3 px-8 text-center font-semibold text-white transition-all cursor-pointer"
         >
-          🎥 Start Camera
-        </button>
+          🎥 Check in
+        </a>
       )}
-
       {stream && (
-        <div className="flex gap-3">
-          <button
-            onClick={capture}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            📸 Capture
-          </button>
-          <button
-            onClick={stopCamera}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            ✖ Stop Camera
-          </button>
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex gap-3">
+            <button
+              onClick={capture}
+              className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-2 px-6 text-center font-semibold text-white transition-all"
+            >
+              📸 Capture
+            </button>
+
+            <button
+              type="button"
+              className="text-accent font-display text-sm font-semibold"
+              onClick={stopCamera}
+            >
+              ✖ Hủy check-in
+            </button>
+          </div>
+
+          <p className="text-sm text-gray-500">
+            Nếu bạn không muốn chụp nữa, bấm “Hủy check-in” để tắt camera.
+          </p>
         </div>
       )}
     </div>

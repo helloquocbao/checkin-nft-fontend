@@ -22,23 +22,23 @@ const hero = () => {
         <div className="grid h-full items-center gap-4 md:grid-cols-12">
           <div className="col-span-6 flex h-full flex-col items-center justify-center py-10 md:items-start md:py-20 xl:col-span-4">
             <h1 className="text-jacarta-700 font-bold font-display mb-6 text-center text-5xl dark:text-white md:text-left lg:text-6xl xl:text-7xl">
-              Buy, sell and collect NFTs.
+              Snap it. Mint it. Flex it.
             </h1>
             <p className="dark:text-jacarta-200 mb-8 text-center text-lg md:text-left">
-              The worlds largest digital marketplace for crypto collectibles and
-              non-fungible tokens
+              Your memories deserve to last forever — moments, beautifully
+              preserved on the blockchain.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 justify-center">
               <Link legacyBehavior href="/create">
-                <a className="bg-accent shadow-accent-volume hover:bg-accent-dark w-36 rounded-full py-3 px-8 text-center font-semibold text-white transition-all">
+                <a className="bg-accent shadow-accent-volume hover:bg-accent-dark w-72 rounded-full py-5 px-8 text-center font-semibold text-white transition-all">
                   Upload
                 </a>
               </Link>
-              <Link legacyBehavior href="/collection/explore_collection">
+              {/* <Link legacyBehavior href="/collection/explore_collection">
                 <a className="text-accent shadow-white-volume hover:bg-accent-dark hover:shadow-accent-volume w-36 rounded-full bg-white py-3 px-8 text-center font-semibold transition-all hover:text-white">
                   Explore
                 </a>
-              </Link>
+              </Link> */}
             </div>
           </div>
 

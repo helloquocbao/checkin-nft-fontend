@@ -13,10 +13,10 @@ const HomePage = () => {
     <main>
       <Meta title="Home 1" />
       <Hero />
-      <Bids />
-      <Top_collection />
-      <Tranding_category />
-      <NewseLatter />
+      {/* <Bids /> */}
+      {/* <Top_collection /> */}
+      {/* <Tranding_category /> */}
+      {/* <NewseLatter /> */}
     </main>
   );
 };
