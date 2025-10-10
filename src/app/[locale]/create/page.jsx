@@ -3,16 +3,13 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import CameraCapture from "@/components/cameraCapture/CameraCapture";
 import Meta from "@/components/Meta";
-import { FUNCTION_NAME, MODULE_NAME, PACKAGE_ID } from "@/lib/constant";
+import { walletModalShow } from "@/redux/counterSlice";
 import {
   useSignAndExecuteTransaction,
   useCurrentAccount,
   useSuiClient,
 } from "@mysten/dapp-kit";
-import { walletModalShow } from "@/redux/counterSlice"; // nếu bạn dùng Redux hiển thị modal
 import { Transaction } from "@mysten/sui/transactions";
-
-const PUBLISHER_URL = "https://publisher.walrus-testnet.walrus.space";
 
 export default function Create() {
   const dispatch = useDispatch();
@@ -22,7 +19,6 @@ export default function Create() {
 
   const [imageBlob, setImageBlob] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
-  const [result, setResult] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [epochs, setEpochs] = useState(1);
   const [blobId, setBlobId] = useState("");
@@ -34,7 +30,55 @@ export default function Create() {
     setImagePreview(URL.createObjectURL(blob));
   };
 
-  // 🧩 Mint NFT sau khi upload
+  // 🧩 Upload ảnh lên Walrus
+  const handleUpload = async () => {
+    if (!account) {
+      dispatch(walletModalShow());
+      return;
+    }
+
+    if (!imageBlob) {
+      alert("Vui lòng chụp ảnh trước khi upload!");
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      const response = await fetch(
+        "https://publisher.walrus-testnet.walrus.space/v1/blobs",
+        {
+          method: "PUT",
+          body: imageBlob,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.status}`);
+      }
+
+      const info = await response.json();
+      console.log("✅ Walrus upload info:", info);
+
+      const newBlobId =
+        info?.newlyCreated?.blobObject?.blobId || info?.blobObject?.blobId;
+
+      if (!newBlobId) {
+        throw new Error("Không tìm thấy blobId trong phản hồi từ Walrus!");
+      }
+
+      console.log("🆔 Blob ID:", newBlobId);
+      setBlobId(newBlobId);
+      await handleMint(newBlobId);
+    } catch (err) {
+      console.error("❌ Upload error:", err);
+      alert(`Upload lỗi: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // 🧩 Mint NFT
   const handleMint = async (newBlobId) => {
     if (!account) {
       dispatch(walletModalShow());
@@ -43,44 +87,53 @@ export default function Create() {
 
     setLoading(true);
     try {
+      console.log("🚀 Bắt đầu mint NFT với blobId:", newBlobId);
       const tx = new Transaction();
-      const blobStr = String(newBlobId);
 
-      // 1️⃣ Tạo random object
-
-      // 2️⃣ Gọi hàm mint trong module của bạn
       tx.moveCall({
-        target: `${PACKAGE_ID}::${MODULE_NAME}::${FUNCTION_NAME}`,
-        arguments: [
-          tx.pure.string("My NFT"),
-          tx.pure.string(blobStr),
-          tx.object("0x8"),
-        ],
+        target: `0x8a6b70d40ba106daa43249f6d1a4c78724deb7fca33bc8fa709fa73b7827d267::checkin_nft::mint`,
+        arguments: [tx.pure.string("My NFT"), tx.pure.string(newBlobId)],
       });
 
-      // 3️⃣ Gửi transaction
       const result = await signAndExecute({
         transaction: tx,
         chain: "sui:testnet",
       });
 
-      // 4️⃣ Chờ kết quả
+      // Chờ transaction hoàn tất
       const txDetails = await client.waitForTransaction({
         digest: result.digest,
         options: { showEvents: true, showObjectChanges: true },
       });
 
-      console.log("Tx details:", txDetails);
+      console.log("📜 Tx details:", txDetails);
 
       const created = txDetails.objectChanges?.find(
         (c) => c.type === "created"
       );
+      const objectId = created?.objectId;
 
-      if (created) {
-        setNftInfo({ tokenId: created.objectId });
-        alert("✅ Mint thành công!");
+      if (objectId) {
+        const nftObject = await client.getObject({
+          id: objectId,
+          options: { showContent: true },
+        });
+
+        console.log("🎨 NFT Object:", nftObject);
+
+        const fields = nftObject.data?.content?.fields;
+
+        setNftInfo({
+          id: objectId,
+          name: fields?.name,
+          image_url: fields?.image_url,
+          rarity: fields?.rarity,
+          completion: fields?.completion,
+          owner: fields?.owner,
+          digest: result.digest,
+        });
       } else {
-        alert("Không tìm thấy tokenId!");
+        alert("Không tìm thấy objectId trong transaction!");
       }
     } catch (err) {
       console.error("Mint error:", err);
@@ -90,55 +143,9 @@ export default function Create() {
     }
   };
 
-  // 🧩 Upload ảnh lên Walrus
-  const handleUpload = async () => {
-    await handleMint("zTR9A0n3IhO4Aa2r2DFfGDdJhiWaopj2n7nhO5o-It8");
-
-    // if (!account) {
-    //   dispatch(walletModalShow());
-    //   return;
-    // }
-
-    // if (!imageBlob) {
-    //   alert("Vui lòng chụp ảnh trước khi upload!");
-    //   return;
-    // }
-
-    // try {
-    //   setUploading(true);
-    //   setResult(null);
-
-    //   const url = `${PUBLISHER_URL}/v1/blobs?epochs=${epochs}`;
-    //   console.log("Uploading to:", url);
-
-    //   const response = await fetch(url, {
-    //     method: "PUT",
-    //     body: imageBlob,
-    //   });
-
-    //   if (response.ok) {
-    //     const info = await response.json();
-    //     const newBlobId = info?.newlyCreated?.blobObject?.blobId;
-    //     console.log("✅ Upload thành công:", newBlobId);
-    //     setBlobId(newBlobId);
-    //     setResult(info);
-    //     await handleMint(newBlobId);
-    //   } else {
-    //     console.error("❌ Upload thất bại:", response.status);
-    //     setResult({ error: "Upload failed", status: response.status });
-    //   }
-    // } catch (err) {
-    //   console.error("❌ Error:", err);
-    //   setResult({ error: err.message });
-    // } finally {
-    //   setUploading(false);
-    // }
-  };
-
   const handleRetake = () => {
     setImageBlob(null);
     setImagePreview("");
-    setResult(null);
     setBlobId("");
     setNftInfo(null);
   };
@@ -190,16 +197,60 @@ export default function Create() {
             </button>
           </div>
 
-          {nftInfo && (
-            <p className="text-green-600 mt-2">
-              ✅ Token ID: {nftInfo.tokenId}
+          {loading && (
+            <p className="text-gray-500 animate-pulse mt-2">
+              Đang xử lý mint NFT...
             </p>
           )}
 
-          {result && (
-            <pre className="text-left bg-gray-100 p-3 rounded mt-4 max-w-md break-all">
-              {JSON.stringify(result, null, 2)}
-            </pre>
+          {nftInfo && (
+            <div className="mt-6 border-t pt-6 w-full max-w-md text-left">
+              <h2 className="text-xl font-semibold mb-3">🎉 NFT Minted!</h2>
+
+              <img
+                src={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${nftInfo.image_url}`}
+                alt={nftInfo.name}
+                className="w-full rounded-lg shadow-md mb-4"
+              />
+
+              <ul className="space-y-1 text-gray-700">
+                <li>
+                  <strong>ID:</strong> {nftInfo.id}
+                </li>
+                <li>
+                  <strong>Name:</strong> {nftInfo.name}
+                </li>
+                <li>
+                  <strong>Rarity:</strong> {nftInfo.rarity}
+                </li>
+                <li>
+                  <strong>Completion:</strong> {nftInfo.completion}
+                </li>
+                <li>
+                  <strong>Owner:</strong> {nftInfo.owner}
+                </li>
+              </ul>
+
+              <div className="mt-4 flex flex-col gap-2">
+                <a
+                  href={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${nftInfo.image_url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  🔗 View image on Walrus
+                </a>
+
+                <a
+                  href={`https://suiexplorer.com/txblock/${nftInfo.digest}?network=testnet`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 underline"
+                >
+                  🔍 View on Sui Explorer
+                </a>
+              </div>
+            </div>
           )}
         </div>
       )}

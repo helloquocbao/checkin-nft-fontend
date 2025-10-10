@@ -1,7 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
 
-
 export default function CameraCapture({ onCapture }) {
   const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
@@ -29,7 +28,12 @@ export default function CameraCapture({ onCapture }) {
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
     canvas.getContext("2d").drawImage(videoRef.current, 0, 0);
-    canvas.toBlob((b) => b && onCapture(b), "image/jpeg");
+    canvas.toBlob((blob) => {
+      if (blob) {
+        onCapture(blob);
+        stopCamera(); // ✅ Tắt camera sau khi chụp
+      }
+    }, "image/jpeg");
   };
 
   return (
