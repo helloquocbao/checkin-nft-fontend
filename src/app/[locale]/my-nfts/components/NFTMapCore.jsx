@@ -103,6 +103,14 @@ export default function NFTMapCore() {
                     <span className="flex justify-between mr-1 mb-1">
                       <span className="font-semibold">Rarity:</span>
                       <span
+                        style={{
+                          color:
+                            item?.rarity === "Common"
+                              ? "#9CA3AF"
+                              : item?.rarity === "Epic"
+                              ? "#7C3AED"
+                              : "#FACC15",
+                        }}
                         className={`font-semibold w-full text-lg flex justify-end mr-4 ${
                           item?.rarity === "Common"
                             ? "text-black"
@@ -117,7 +125,7 @@ export default function NFTMapCore() {
                     </span>
                     <span className="flex justify-between mr-1  mb-1">
                       <span className="font-semibold">Completion:</span>
-                      <span className="w-full flex justify-end text-base mr-4">
+                      <span className="w-full flex justify-end text-base mr-4 font-semibold">
                         {item?.completion}
                       </span>
                       <br />

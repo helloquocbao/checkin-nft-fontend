@@ -126,6 +126,14 @@ export default function Collection_items() {
                         <div className="flex justify-between">
                           <span className="font-semibold">Rarity:</span>
                           <div
+                            style={{
+                              color:
+                                item?.rarity === "Common"
+                                  ? "#9CA3AF"
+                                  : item?.rarity === "Epic"
+                                  ? "#7C3AED"
+                                  : "#FACC15",
+                            }}
                             className={`font-semibold w-full text-lg flex justify-end mr-4 ${
                               item?.rarity === "Common"
                                 ? "text-gray-500"
@@ -139,7 +147,7 @@ export default function Collection_items() {
                         </div>
                         <div className="flex justify-between">
                           <span className="font-semibold">Completion:</span>
-                          <span className="w-full flex justify-end text-base mr-4">
+                          <span className="w-full  font-semibold flex justify-end text-base mr-4">
                             {item?.completion}
                           </span>
                         </div>
