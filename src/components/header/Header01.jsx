@@ -359,17 +359,17 @@ export default function Header01() {
               <div className="dark:hidden">
                 <Image
                   src={Logo}
-                  height={28}
-                  width={130}
+                  height={68}
+                  width={250}
                   alt="Xhibiter | NFT Marketplace"
-                  className="max-h-7 h-auto "
+                  className=" h-auto "
                 />
               </div>
               <div className="hidden dark:block">
                 <Image
                   src={WhiteLogo}
-                  height={28}
-                  width={130}
+                  height={48}
+                  width={200}
                   alt="Xhibiter | NFT Marketplace"
                 />
               </div>
