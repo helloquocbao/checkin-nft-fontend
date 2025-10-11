@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 const NFTMapLocate = dynamic(() => import("./components/NFTMapLocate"), {
   ssr: false,
 });
+
 function shortenAddress(address, chars = 4) {
   if (!address) return "";
   return `${address.slice(0, chars + 2)}...${address.slice(-chars)}`;
@@ -15,7 +16,7 @@ export default function Collection_items() {
   const client = useSuiClient();
   const account = useCurrentAccount();
   const [nfts, setNfts] = useState([]);
-  const [showMap, setShowMap] = useState(false);
+  const [viewMode, setViewMode] = useState("list"); // 'list' | 'map'
 
   useEffect(() => {
     if (!account?.address) return;
@@ -46,6 +47,7 @@ export default function Collection_items() {
 
   return (
     <section className="relative pb-10 pt-20 md:pt-32">
+      {/* background */}
       <picture className="pointer-events-none absolute inset-x-0 top-0 -z-10 block dark:hidden h-full">
         <img
           src="/images/gradient.jpg"
@@ -60,99 +62,109 @@ export default function Collection_items() {
           className="h-full w-full"
         />
       </picture>
+
       <div className="container mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">
           🌍 My NFT Check-in Collection
         </h2>
 
-        {/* ✅ Danh sách NFT hiển thị mặc định */}
+        {/* 🔘 Toggle View Buttons */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600 bg-white dark:bg-jacarta-700">
+            <button
+              onClick={() => setViewMode("list")}
+              className={`px-6 py-2 font-medium transition ${
+                viewMode === "list"
+                  ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-blue"
+                  : "hover:bg-gray-100 dark:hover:bg-jacarta-600 text-gray-600 dark:text-gray-300"
+              }`}
+            >
+              📜 List View
+            </button>
+            <button
+              onClick={() => setViewMode("map")}
+              className={`px-6 py-2 font-medium transition ${
+                viewMode === "map"
+                  ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-blue"
+                  : "hover:bg-gray-100 dark:hover:bg-jacarta-600 text-gray-600 dark:text-gray-300"
+              }`}
+            >
+              🗺️ Map View
+            </button>
+          </div>
+        </div>
+
+        {/* ✅ Content */}
         {validNFTs.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {validNFTs?.map((item) => {
-                return (
+            {viewMode === "list" && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
+                {validNFTs?.map((item) => (
                   <article key={item?.id?.id}>
                     <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
                       <figure className="relative">
-                        <a>
-                          <img
-                            src={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${item?.image_url}`}
-                            alt="item 5"
-                            className="w-full h-[230px] rounded-[0.625rem] object-cover"
-                          />
-                        </a>
+                        <img
+                          src={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${item?.image_url}`}
+                          alt={item?.name}
+                          className="w-full h-[230px] rounded-[0.625rem] object-cover"
+                        />
                       </figure>
-                      <div className="mt-7 flex items-center  justify-between">
+                      <div className="mt-7 flex items-center justify-between">
                         <a
                           href={`https://suiexplorer.com/object/${item?.id?.id}?network=testnet`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-display mb-2 *:text-jacarta-700 hover:text-accent text-base dark:text-white flex justify-between w-full items-center gap-1"
                         >
-                          <span className="w-full text-xl"> {item?.name} </span>
-                          <span className="w-full flex justify-end mr-4">
+                          <span className="w-full text-xl">{item?.name}</span>
+                          <span className="w-full flex justify-end mr-4 text-sm opacity-70">
                             #{shortenAddress(item?.id?.id)}
                           </span>
                         </a>
                       </div>
-                      <div className="mt-2 text-sm ">
-                        <span className="flex justify-between mr-1 mb-1">
+                      <div className="mt-2 text-sm space-y-1">
+                        <div className="flex justify-between">
                           <span className="font-semibold">Rarity:</span>
-                          <span
+                          <div
                             className={`font-semibold w-full text-lg flex justify-end mr-4 ${
                               item?.rarity === "Common"
-                                ? "text-black"
+                                ? "text-gray-500"
                                 : item?.rarity === "Epic"
-                                ? "text-[#5D2F77]"
-                                : "text-[#FFCC00]"
+                                ? "text-purple-600"
+                                : "text-yellow-400"
                             }`}
                           >
                             {item?.rarity}
-                          </span>
-                          <br />
-                        </span>
-                        <span className="flex justify-between mr-1  mb-1">
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
                           <span className="font-semibold">Completion:</span>
                           <span className="w-full flex justify-end text-base mr-4">
                             {item?.completion}
                           </span>
-                          <br />
-                        </span>
-                        <span className="flex justify-between mr-1  mb-1">
-                          <span className="font-semibold">Latitude:</span>{" "}
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-semibold">Latitude:</span>
                           <span className="w-full flex justify-end mr-4">
                             {item?.latitude}
                           </span>
-                          <br />
-                        </span>
-                        <span className="flex justify-between mr-1  mb-1">
-                          <span className="font-semibold">Longitude:</span>{" "}
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-semibold">Longitude:</span>
                           <span className="w-full flex justify-end mr-4">
                             {item?.longitude}
                           </span>
-                          <br />
-                        </span>
+                        </div>
                       </div>
                     </div>
                   </article>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            )}
 
-            {/* Nút toggle bản đồ */}
-            <div className="text-center mt-10">
-              <button
-                onClick={() => setShowMap((prev) => !prev)}
-                className="bg-gradient-to-r from-blue-500 to-cyan-400 text-[#59AC77] px-6 py-2 rounded-lg shadow-md hover:opacity-90 transition"
-              >
-                {showMap ? "Hide Map" : "🗺️ View on Map"}
-              </button>
-            </div>
-
-            {/* Hiển thị bản đồ khi toggle bật */}
-            {showMap && (
-              <div className="mt-8 h-[500px]  rounded-xl overflow-hidden shadow-lg animate-fade-in">
-                <NFTMapLocate />
+            {viewMode === "map" && (
+              <div className="mt-8 h-[500px] rounded-xl overflow-hidden shadow-lg animate-fade-in">
+                <NFTMapLocate nfts={validNFTs} />
               </div>
             )}
           </>
