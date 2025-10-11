@@ -50,6 +50,20 @@ export default function Collection_items() {
 
   return (
     <section className="relative pb-10 pt-20 md:pt-32">
+      <picture className="pointer-events-none absolute inset-x-0 top-0 -z-10 block dark:hidden h-full">
+        <img
+          src="/images/gradient.jpg"
+          alt="gradient"
+          className="h-full w-full"
+        />
+      </picture>
+      <picture className="pointer-events-none absolute inset-x-0 top-0 -z-10 hidden dark:block">
+        <img
+          src="/images/gradient_dark.jpg"
+          alt="gradient dark"
+          className="h-full w-full"
+        />
+      </picture>
       <div className="container mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">
           🌍 My NFT Check-in Collection

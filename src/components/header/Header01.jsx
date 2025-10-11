@@ -441,6 +441,25 @@ export default function Header01() {
                     </a>
                   </Link>
                 </li>
+
+                {/* my nfts */}
+                <li className="group">
+                  <Link legacyBehavior href="/my-nfts">
+                    <a>
+                      <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
+                        <span
+                          className={
+                            isChildrenPageActive(route.asPath, "/my-nfts")
+                              ? "text-accent dark:text-accent"
+                              : ""
+                          }
+                        >
+                          My NFTs
+                        </span>
+                      </button>
+                    </a>
+                  </Link>
+                </li>
               </ul>
             </nav>
             {/* End menu for desktop */}
@@ -625,6 +644,24 @@ export default function Header01() {
                       }
                     >
                       Check in and mint
+                    </span>
+                  </button>
+                </a>
+              </Link>
+            </li>
+
+            <li className="group" onClick={() => setToggle(false)}>
+              <Link legacyBehavior href="/my-nfts">
+                <a>
+                  <button className="text-jacarta-700 font-display hover:text-accent focus:text-accent dark:hover:text-accent dark:focus:text-accent flex items-center justify-between py-3.5 text-base dark:text-white lg:px-5">
+                    <span
+                      className={
+                        isChildrenPageActive("/my-nfts", route.asPath)
+                          ? "text-accent dark:text-accent"
+                          : ""
+                      }
+                    >
+                      My NFTs
                     </span>
                   </button>
                 </a>

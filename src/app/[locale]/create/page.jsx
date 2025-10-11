@@ -304,14 +304,6 @@ export default function Create() {
                 </ul>
 
                 <div className="mt-4 flex flex-col gap-2">
-                  <a
-                    href={`https://aggregator.walrus-testnet.walrus.space/v1/blobs/${nftInfo.image_url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    🔗 View image on Walrus
-                  </a>
                   {nftInfo.latitude && nftInfo.longitude && (
                     <iframe
                       title="Map Preview"
