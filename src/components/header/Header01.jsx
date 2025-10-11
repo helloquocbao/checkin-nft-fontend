@@ -484,7 +484,7 @@ export default function Header01() {
                     </span>
                     <div className="flex items-center">
                       <svg className="icon icon-ETH -ml-1 mr-1 h-[1.125rem] w-[1.125rem]">
-                        <use xlinkHref="/icons.svg#icon-ETH" />
+                        {/* <use xlinkHref="/icons.svg#icon-ETH" /> */}
                       </svg>
                       <span className="text-green text-lg font-bold">
                         {balance ?? "Loading..."} SUI
@@ -500,24 +500,8 @@ export default function Header01() {
           {/* header menu conent end for desktop */}
 
           <div className="ml-auto flex lg:hidden">
-            <Link legacyBehavior href="/profile/user_avatar">
-              <a
-                className="border-jacarta-100 hover:bg-accent focus:bg-accent group dark:hover:bg-accent ml-2 flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15]"
-                aria-label="profile"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width={24}
-                  height={24}
-                  className="fill-jacarta-700 h-4 w-4 transition-colors group-hover:fill-white group-focus:fill-white dark:fill-white"
-                >
-                  <path fill="none" d="M0 0h24v24H0z" />
-                  <path d="M11 14.062V20h2v-5.938c3.946.492 7 3.858 7 7.938H4a8.001 8.001 0 0 1 7-7.938zM12 13c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6z" />
-                </svg>
-              </a>
-            </Link>
-            <DarkMode />
+            <WalletButton />
+            {/* <DarkMode /> */}
             <button
               className="js-mobile-toggle border-jacarta-100 hover:bg-accent dark:hover:bg-accent focus:bg-accent group ml-2 flex h-10 w-10 items-center justify-center rounded-full border bg-white transition-colors hover:border-transparent focus:border-transparent dark:border-transparent dark:bg-white/[.15]"
               aria-label="open mobile menu"
@@ -652,7 +636,7 @@ export default function Header01() {
 
         <div className="mt-10 w-full lg:hidden">
           <div className="js-wallet bg-accent shadow-accent-volume hover:bg-accent-dark block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all">
-            SUI not available :
+            {shortenAddress(account?.address)}
           </div>
           <hr className="dark:bg-jacarta-600 bg-jacarta-100 my-5 h-px border-0" />
           <div className="flex items-center justify-center space-x-5">

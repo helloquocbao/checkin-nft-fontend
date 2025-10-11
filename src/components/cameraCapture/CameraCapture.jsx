@@ -21,12 +21,14 @@ export default function CameraCapture({ onCapture }) {
 
   const startCamera = async () => {
     try {
-      // ⚙️ Kiểm tra quyền camera (nếu trình duyệt hỗ trợ)
+      // 🧠 Kiểm tra nếu là thiết bị mobile
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      // ⚙️ Kiểm tra quyền camera
       if (navigator.permissions && navigator.permissions.query) {
         const permissionStatus = await navigator.permissions.query({
           name: "camera",
         });
-
         if (permissionStatus.state === "denied") {
           alert(
             "⚠️ Quyền truy cập máy ảnh đã bị chặn!\n\n" +
@@ -36,17 +38,21 @@ export default function CameraCapture({ onCapture }) {
         }
       }
 
-      // 🧩 Mở camera
-      const s = await navigator.mediaDevices.getUserMedia({ video: true });
+      // 🎥 Nếu là mobile, ưu tiên camera sau (environment)
+      const constraints = {
+        video: isMobile
+          ? { facingMode: { ideal: "environment" } }
+          : { facingMode: "user" },
+      };
+
+      const s = await navigator.mediaDevices.getUserMedia(constraints);
       if (videoRef.current) videoRef.current.srcObject = s;
       setStream(s);
     } catch (err) {
       console.error("Camera error:", err);
-
       if (err.name === "NotAllowedError") {
         alert(
-          "⚠️ Bạn đã từ chối quyền truy cập camera.\n\n" +
-            "Hãy bật lại quyền trong Cài đặt trình duyệt và tải lại trang."
+          "⚠️ Bạn đã từ chối quyền truy cập camera.\n\nHãy bật lại quyền trong Cài đặt trình duyệt và tải lại trang."
         );
       } else if (err.name === "NotFoundError") {
         alert("🚫 Không tìm thấy camera trên thiết bị của bạn!");
@@ -95,6 +101,7 @@ export default function CameraCapture({ onCapture }) {
           🎥 Check in
         </a>
       )}
+
       {stream && (
         <div className="flex flex-col items-center gap-3">
           <div className="flex gap-3">
@@ -104,7 +111,6 @@ export default function CameraCapture({ onCapture }) {
             >
               📸 Capture
             </button>
-
             <button
               type="button"
               className="text-accent font-display text-sm font-semibold"
@@ -113,7 +119,6 @@ export default function CameraCapture({ onCapture }) {
               ✖ Hủy check-in
             </button>
           </div>
-
           <p className="text-sm text-gray-500">
             Nếu bạn không muốn chụp nữa, bấm “Hủy check-in” để tắt camera.
           </p>
