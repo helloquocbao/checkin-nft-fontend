@@ -20,7 +20,7 @@ export default function Create() {
   const [imageBlob, setImageBlob] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [uploading, setUploading] = useState(false);
-
+  const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
   const [nftInfo, setNftInfo] = useState(null);
   const [position, setPosition] = useState({
@@ -142,7 +142,7 @@ export default function Create() {
       tx.moveCall({
         target: `0xcc84871dc79970f2dab50400699552c2ebeba058c8e6a8a4e9f5ace44464311f::checkin_nft::mint`,
         arguments: [
-          tx.pure.string("My NFT"),
+          tx.pure.string(inputText || "My NFT"),
           tx.pure.string(newBlobId),
           tx.pure.string(position.latitude),
           tx.pure.string(position.longitude),
@@ -161,7 +161,7 @@ export default function Create() {
       });
 
       console.log("📜 Tx details:", txDetails);
-
+      setInputText("");
       const created = txDetails.objectChanges?.find(
         (c) => c.type === "created"
       );
@@ -240,7 +240,16 @@ export default function Create() {
               />
             )}
 
-            <div className="flex gap-2 items-center"></div>
+            <div className="flex gap-2 items-center">
+              <input
+                type="search"
+                className="text-jacarta-700 placeholder-jacarta-500 focus:ring-accent border-jacarta-100 w-full rounded-2xl border py-[0.6875rem] px-4  dark:border-transparent dark:bg-white/[.15] dark:text-white dark:placeholder-white"
+                placeholder="Tên NFT của bạn"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                maxLength={50}
+              />
+            </div>
 
             <div className="flex gap-3">
               <button

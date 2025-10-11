@@ -83,22 +83,55 @@ export default function Collection_items() {
                           />
                         </a>
                       </figure>
-                      <div className="mt-7 flex items-center justify-between">
-                        <a>
-                          <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
-                            {item?.name}{" "}
-                            <span>#{shortenAddress(item?.id?.id)}</span>
+                      <div className="mt-7 flex items-center  justify-between">
+                        <a
+                          href={`https://suiexplorer.com/object/${item?.id?.id}?network=testnet`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-display mb-2 *:text-jacarta-700 hover:text-accent text-base dark:text-white flex justify-between w-full items-center gap-1"
+                        >
+                          <span className="w-full text-xl"> {item?.name} </span>
+                          <span className="w-full flex justify-end mr-4">
+                            #{shortenAddress(item?.id?.id)}
                           </span>
                         </a>
                       </div>
-                      <div className="mt-2 text-sm">
-                        <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
-                          {item?.rarity}
-                        </span>
-                        <span className="dark:text-jacarta-300 text-jacarta-500">
-                          {item?.latitude}
+                      <div className="mt-2 text-sm ">
+                        <span className="flex justify-between mr-1 mb-1">
+                          <span className="font-semibold">Rarity:</span>
+                          <span
+                            className={`font-semibold w-full text-lg flex justify-end mr-4 ${
+                              item?.rarity === "Common"
+                                ? "text-black"
+                                : item?.rarity === "Epic"
+                                ? "text-[#5D2F77]"
+                                : "text-[#FFCC00]"
+                            }`}
+                          >
+                            {item?.rarity}
+                          </span>
                           <br />
-                          {item?.longitude}
+                        </span>
+                        <span className="flex justify-between mr-1  mb-1">
+                          <span className="font-semibold">Completion:</span>
+                          <span className="w-full flex justify-end text-base mr-4">
+                            {item?.completion}
+                          </span>
+                          <br />
+                        </span>
+                        <span className="flex justify-between mr-1  mb-1">
+                          <span className="font-semibold">Latitude:</span>{" "}
+                          <span className="w-full flex justify-end mr-4">
+                            {item?.latitude}
+                          </span>
+                          <br />
+                        </span>
+                        <span className="flex justify-between mr-1  mb-1">
+                          <span className="font-semibold">Longitude:</span>{" "}
+                          <span className="w-full flex justify-end mr-4">
+                            {item?.longitude}
+                          </span>
+                          <br />
                         </span>
                       </div>
                     </div>
@@ -111,7 +144,7 @@ export default function Collection_items() {
             <div className="text-center mt-10">
               <button
                 onClick={() => setShowMap((prev) => !prev)}
-                className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white px-6 py-2 rounded-lg shadow-md hover:opacity-90 transition"
+                className="bg-gradient-to-r from-blue-500 to-cyan-400 text-[#59AC77] px-6 py-2 rounded-lg shadow-md hover:opacity-90 transition"
               >
                 {showMap ? "Hide Map" : "🗺️ View on Map"}
               </button>
