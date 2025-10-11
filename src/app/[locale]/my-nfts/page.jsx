@@ -2,18 +2,15 @@
 import dynamic from "next/dynamic";
 import { useSuiClient, useCurrentAccount } from "@mysten/dapp-kit";
 import React, { useEffect, useState } from "react";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
+
+const NFTMap = dynamic(() => import("./components/MapLocation"), {
+  ssr: false,
+});
 
 function shortenAddress(address, chars = 4) {
   if (!address) return "";
   return `${address.slice(0, chars + 2)}...${address.slice(-chars)}`;
 }
-
-// ✅ Import tắt SSR cho bản đồ
-const NFTMap = dynamic(() => import("@/components/NFTMap/NFTMap"), {
-  ssr: false,
-});
 
 export default function Collection_items() {
   const client = useSuiClient();
@@ -121,9 +118,9 @@ export default function Collection_items() {
             </div>
 
             {/* Hiển thị bản đồ khi toggle bật */}
-            {showMap && validNFTs && (
-              <div className="mt-8 border rounded-xl overflow-hidden shadow-lg animate-fade-in">
-                <NFTMap nfts={validNFTs} />
+            {showMap && (
+              <div className="mt-8  rounded-xl overflow-hidden shadow-lg animate-fade-in">
+                Comming soon
               </div>
             )}
           </>
