@@ -3,10 +3,9 @@ import dynamic from "next/dynamic";
 import { useSuiClient, useCurrentAccount } from "@mysten/dapp-kit";
 import React, { useEffect, useState } from "react";
 
-const NFTMap = dynamic(() => import("./components/MapLocation"), {
+const NFTMapLocate = dynamic(() => import("./components/NFTMapLocate"), {
   ssr: false,
 });
-
 function shortenAddress(address, chars = 4) {
   if (!address) return "";
   return `${address.slice(0, chars + 2)}...${address.slice(-chars)}`;
@@ -152,8 +151,8 @@ export default function Collection_items() {
 
             {/* Hiển thị bản đồ khi toggle bật */}
             {showMap && (
-              <div className="mt-8  rounded-xl overflow-hidden shadow-lg animate-fade-in">
-                Comming soon
+              <div className="mt-8 h-[500px]  rounded-xl overflow-hidden shadow-lg animate-fade-in">
+                <NFTMapLocate />
               </div>
             )}
           </>
