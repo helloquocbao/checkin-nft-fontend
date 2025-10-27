@@ -4,7 +4,6 @@ import Layout from "../components/layout";
 import { Provider } from "react-redux";
 import { store } from "../redux/store";
 import { useRouter } from "next/router";
-import { MetaMaskProvider } from "metamask-react";
 import Meta from "../components/Meta";
 import UserContext from "../components/UserContext";
 import { useRef } from "react";
@@ -20,8 +19,6 @@ const { networkConfig } = createNetworkConfig({
 });
 
 function MyApp({ Component, pageProps }) {
-  const router = useRouter();
-  const pid = router.asPath;
   const scrollRef = useRef({
     scrollPos: 0,
   });
@@ -38,21 +35,13 @@ function MyApp({ Component, pageProps }) {
               networks={networkConfig}
               defaultNetwork="testnet"
             >
-              <MetaMaskProvider>
+              <WalletProvider>
                 <UserContext.Provider value={{ scrollRef: scrollRef }}>
-                  {pid === "/login" ? (
-                    <WalletProvider>
-                      <Component {...pageProps} />
-                    </WalletProvider>
-                  ) : (
-                    <Layout>
-                      <WalletProvider>
-                        <Component {...pageProps} />
-                      </WalletProvider>
-                    </Layout>
-                  )}
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
                 </UserContext.Provider>
-              </MetaMaskProvider>
+              </WalletProvider>
             </SuiClientProvider>
           </ThemeProvider>
         </Provider>

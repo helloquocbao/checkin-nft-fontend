@@ -19,7 +19,6 @@
     "chart.js": "^3.8.0",
     "@mysten/sui": "^1.39.0",
     "@mysten/dapp-kit": "^0.18.0",
-    "metamask-react": "^2.4.0",
     "moment": "^2.29.4",
     "next": "12.1.6",
     "next-themes": "^0.2.0",
