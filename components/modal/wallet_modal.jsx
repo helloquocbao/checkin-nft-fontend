@@ -7,7 +7,8 @@ const Wallet_modal = () => {
   const dispatch = useDispatch();
 
   const account = useCurrentAccount();
-
+  console.log("Sui account:", account); // Log debug to check account value when wallet connects
+  console.log("account", account); // Xem giá trị account khi connect
   const suiWalletUrl =
     "https://chromewebstore.google.com/detail/sui-wallet/opcgpfmipidbgpenhmajoajpbobppdil";
 
